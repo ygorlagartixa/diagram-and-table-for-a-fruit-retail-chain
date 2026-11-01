@@ -1,0 +1,149 @@
+PASO A TABLAS - CADENA DE FRUTERÍAS
+====================================
+
+Notación:
+  [PK]  = clave primaria (si hay varias [PK] en una tabla, la clave es compuesta)
+  [FK]  = clave foránea; la flecha (->) indica la tabla a la que apunta
+
+
+1. ESQUEMA RELACIONAL
+---------------------
+
+FRUTERIA(id_fruteria[PK], nombre, calle, ciudad)
+
+EMPLEADO(id_empleado[PK], nombre, apellidos, puesto, sueldo,
+         id_fruteria[FK -> FRUTERIA])
+
+SEGURO(codigo_seguro[PK], precio, entidad_emisora,
+       id_fruteria[FK -> FRUTERIA, UNIQUE, NOT NULL])
+
+CLIENTE(id_cliente[PK], es_registrado, nombre_completo)
+
+FACTURA(id_fruteria[PK][FK -> FRUTERIA], cod_factura[PK], num_caja, fecha, hora,
+        id_cliente[FK -> CLIENTE])
+
+FRUTA(referencia[PK], nombre, pais_origen, calibre)
+
+FRUTA_LOCAL(referencia[PK][FK -> FRUTA])
+
+FRUTA_EUROPEA(referencia[PK][FK -> FRUTA], empresa_distribuidora)
+
+FRUTA_EXOTICA(referencia[PK][FK -> FRUTA], cod_cert_imp, num_reg_san)
+
+PROVEEDOR(NIF[PK], nombre_marca, tipo_empresa, persona_contacto, telefono)
+
+VENDE(id_fruteria[PK][FK -> FRUTERIA], referencia[PK][FK -> FRUTA])
+
+SUMINISTRA(NIF[PK][FK -> PROVEEDOR], referencia[PK][FK -> FRUTA])
+
+CONTIENE(id_fruteria[PK], cod_factura[PK], referencia[PK][FK -> FRUTA], cantidad,
+         FK compuesta: (id_fruteria, cod_factura) -> FACTURA)
+
+
+2. DETALLE DE CADA TABLA
+------------------------
+
+FRUTERIA
+  PK ............ id_fruteria
+  Atributos ..... nombre, calle, ciudad
+  FK ............ (ninguna)
+  Observación ... "dirección" es un atributo compuesto: se descompone en
+                  las columnas calle y ciudad.
+
+EMPLEADO
+  PK ............ id_empleado
+  Atributos ..... nombre, apellidos, puesto, sueldo
+  FK ............ id_fruteria -> FRUTERIA
+  Observación ... Relación 1:N (tiene): la FK va en el lado N.
+
+SEGURO
+  PK ............ codigo_seguro
+  Atributos ..... precio, entidad_emisora
+  FK ............ id_fruteria -> FRUTERIA (UNIQUE, NOT NULL)
+  Observación ... Relación 1:1 (tiene): UNIQUE garantiza que cada frutería
+                  tenga un solo seguro, y NOT NULL que todo seguro pertenezca
+                  a una frutería. La FK también podría ir en FRUTERIA.
+
+CLIENTE
+  PK ............ id_cliente
+  Atributos ..... es_registrado, nombre_completo
+  FK ............ (ninguna)
+
+FACTURA
+  PK ............ (id_fruteria, cod_factura)
+  Atributos ..... num_caja, fecha, hora
+  FK ............ id_fruteria -> FRUTERIA
+                  id_cliente -> CLIENTE
+  Observación ... Entidad débil: su clave se forma con la clave de FRUTERIA
+                  (relación identificadora "emite", 1:N) más su clave parcial
+                  cod_factura, que puede repetirse entre fruterías.
+                  La FK de CLIENTE procede de la relación 1:N "recibe".
+
+FRUTA
+  PK ............ referencia
+  Atributos ..... nombre, pais_origen, calibre
+  FK ............ (ninguna)
+  Observación ... Supertipo de la especialización (disjunta y total).
+
+FRUTA_LOCAL
+  PK ............ referencia
+  Atributos ..... (ninguno propio)
+  FK ............ referencia -> FRUTA
+  Observación ... Subtipo sin atributos propios.
+
+FRUTA_EUROPEA
+  PK ............ referencia
+  Atributos ..... empresa_distribuidora
+  FK ............ referencia -> FRUTA
+  Observación ... Subtipo: hereda la clave del supertipo.
+
+FRUTA_EXOTICA
+  PK ............ referencia
+  Atributos ..... cod_cert_imp, num_reg_san
+  FK ............ referencia -> FRUTA
+  Observación ... Subtipo: hereda la clave del supertipo.
+
+PROVEEDOR
+  PK ............ NIF
+  Atributos ..... nombre_marca, tipo_empresa, persona_contacto, telefono
+  FK ............ (ninguna)
+
+VENDE
+  PK ............ (id_fruteria, referencia)
+  Atributos ..... (ninguno)
+  FK ............ id_fruteria -> FRUTERIA
+                  referencia -> FRUTA
+  Observación ... Relación N:M: tabla intermedia.
+
+SUMINISTRA
+  PK ............ (NIF, referencia)
+  Atributos ..... (ninguno)
+  FK ............ NIF -> PROVEEDOR
+                  referencia -> FRUTA
+  Observación ... Relación N:M: tabla intermedia.
+
+CONTIENE
+  PK ............ (id_fruteria, cod_factura, referencia)
+  Atributos ..... cantidad
+  FK ............ (id_fruteria, cod_factura) -> FACTURA
+                  referencia -> FRUTA
+  Observación ... Relación N:M con atributo propio (cantidad). La FK hacia
+                  FACTURA es compuesta porque la clave de FACTURA lo es.
+
+
+3. REGLAS APLICADAS
+-------------------
+
+- Relación 1:N: la clave de la entidad del lado 1 pasa como FK a la tabla del
+  lado N.
+- Relación 1:1: la FK se coloca en una de las dos tablas, con restricción
+  UNIQUE.
+- Relación N:M: se crea una tabla intermedia cuya clave primaria es la unión
+  de las claves de las dos entidades; los atributos de la relación (cantidad)
+  van en esa tabla.
+- Entidad débil: su clave primaria es la clave de la entidad fuerte de la que
+  depende más su clave parcial.
+- Especialización disjunta y total: una tabla para el supertipo y una tabla
+  por cada subtipo, con la misma clave primaria, que además es FK al supertipo.
+- Atributo compuesto (dirección): se descompone en sus componentes
+  (calle, ciudad).
