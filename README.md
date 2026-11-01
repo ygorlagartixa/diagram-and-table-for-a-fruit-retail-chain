@@ -9,7 +9,7 @@
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=flat&logo=github&logoColor=white)
 
 # 🎯 | Challenge  <a id="Challenge"></a>
-This project was developed to model and simulate the database system of a fruit and vegetable retail chain.
+This project was developed to model and simulate the database system of a fruit retail chain.
 The main objective was to translate a comprehensive set of business rules into a structured, normalized, and robust conceptual (ER model) and logical (relational schema) database model.
 
 # 💡 | Solution  <a id="Solution"></a>
@@ -31,7 +31,7 @@ The conceptual diagram visually maps the entities and their cardinalities, while
 # 📄 | Documentation  <a id="Documentation"></a>
 * [Diagram](Docs/1.Diagram.png)
 * [Tables](Docs/2.Tables.txt)
-* [Diagram and Table](Docs/3.Diagram and Table.pdf)
+* [Diagram and Table](Docs/3.Diagram_and_Table.pdf)
 
 # 🧠 | What I Learned  <a id="What I Learned"></a>
 Throughout the development of this project, I improved my knowledge and skills in:
