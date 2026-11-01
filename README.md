@@ -29,8 +29,9 @@ The main objective of the Entity-Relationship diagram (ER model) and the relatio
 The conceptual diagram visually maps the entities and their cardinalities, while the relational schema formally defines the tables, primary keys, foreign keys, and integrity constraints.
 
 # 📄 | Documentation  <a id="Documentation"></a>
-* [Diagram](Docs/Diagram.png)
-* [Tables](Docs/Tables.txt)
+* [Diagram](Docs/1.Diagram.png)
+* [Tables](Docs/2.Tables.txt)
+* [Diagram and Table](Docs/3.Diagram and Table.pdf)
 
 # 🧠 | What I Learned  <a id="What I Learned"></a>
 Throughout the development of this project, I improved my knowledge and skills in:
